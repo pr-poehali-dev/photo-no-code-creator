@@ -22,11 +22,36 @@ export default function Index() {
     if (!prompt.trim()) return;
     
     setIsGenerating(true);
-    setTimeout(() => {
-      const mockImages = Array(quantity[0]).fill('https://placehold.co/1024x1024/9b87f5/ffffff?text=AI+Generated');
-      setGeneratedImages(mockImages);
+    
+    try {
+      const response = await fetch('https://functions.poehali.dev/a3a7e2f9-8bd1-4daf-9f6d-c5717a086773', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          prompt,
+          size,
+          quality,
+          model,
+          n: quantity[0]
+        })
+      });
+      
+      const data = await response.json();
+      
+      if (response.ok && data.images) {
+        setGeneratedImages(data.images);
+      } else {
+        console.error('Error generating image:', data.error);
+        alert('Ошибка генерации: ' + (data.error || 'Неизвестная ошибка'));
+      }
+    } catch (error) {
+      console.error('Network error:', error);
+      alert('Ошибка сети. Проверьте подключение к интернету.');
+    } finally {
       setIsGenerating(false);
-    }, 2000);
+    }
   };
 
   const exampleImages = [

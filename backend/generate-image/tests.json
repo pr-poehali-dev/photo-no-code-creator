@@ -1,0 +1,34 @@
+{
+  "tests": [
+    {
+      "name": "Test image generation with valid prompt",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "prompt": "A beautiful sunset over mountains",
+        "size": "1024x1024",
+        "quality": "standard",
+        "model": "dall-e-3",
+        "n": 1
+      },
+      "expectedStatus": 200,
+      "expectedBody": {
+        "images": "array",
+        "prompt": "string",
+        "model": "string"
+      },
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Test error on missing prompt",
+      "method": "POST",
+      "path": "/",
+      "body": {},
+      "expectedStatus": 400,
+      "expectedBody": {
+        "error": "string"
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}
